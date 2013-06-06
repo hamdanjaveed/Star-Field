@@ -4,6 +4,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import point.Point;
+
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
@@ -15,6 +18,8 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
  */
 public class Main {
 
+	private Point[] points;
+
 	public static void main(String[] args) {
 		new Main();
 	}
@@ -22,6 +27,7 @@ public class Main {
 	public Main() {
 		initDisplay();
 		initGL();
+		initPoints();
 		programLoop();
 	}
 
@@ -45,6 +51,14 @@ public class Main {
 		gluPerspective(70.0f, 800.0f / 600.0f, 0.001f, 100.0f);
 		// go back to model matrix
 		glMatrixMode(GL_MODELVIEW);
+	}
+
+	private void initPoints() {
+		points = new Point[10000];
+		Random random = new Random();
+		for (int i = 0; i < points.length; i++) {
+			points[i] = new Point((random.nextFloat() - 0.5f) * 100.0f, (random.nextFloat() - 0.5f) * 100.0f, random.nextInt(200) - 200);
+		}
 	}
 
 	private void programLoop() {
