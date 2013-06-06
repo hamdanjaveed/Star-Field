@@ -19,6 +19,7 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 public class Main {
 
 	private Point[] points;
+	private float travelVelocity;
 
 	public static void main(String[] args) {
 		new Main();
@@ -63,10 +64,41 @@ public class Main {
 
 	private void programLoop() {
 		while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			renderGL();
+			update();
 			Display.update();
 			Display.sync(60);
 		}
 		exitProgram();
+	}
+
+	private void renderGL() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glTranslatef(0, 0, travelVelocity);
+		glBegin(GL_POINTS); {
+			for (Point point : points) {
+				glVertex3f(point.x, point.y, point.z);
+			}
+		} glEnd();
+	}
+
+	private void update() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			travelVelocity += 0.01f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			travelVelocity -= 0.01f;
+		}
+
+		while (Keyboard.next()) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+				travelVelocity = 0.0f;
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+				travelVelocity = 0.0f;
+				glLoadIdentity();
+			}
+		}
 	}
 
 	private void exitProgram() {
